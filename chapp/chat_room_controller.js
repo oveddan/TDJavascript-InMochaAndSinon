@@ -4,6 +4,15 @@ var chatRoomController = {
             request : { value : request },
             response : {value : response}
         });
+    },
+    post : function(){
+        var body = '';
+        this.request.addListener('data', function(chunk){
+           body += chunk;
+        });
+        this.request.addListener('end', function(){
+           JSON.parse(decodeURI(body));
+        });
     }
 };
 
