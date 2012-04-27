@@ -86,4 +86,13 @@ suite('chatRoom.getMessagesSince', function(){
     test('should not throw exceptions if no callback provided', function(done){
         done();
     });
+    test('should yield an empty array if messages array does not exist', function(done){
+        done();
+    });
+    test('should yield an empty array if no relevant messages exist', function(done){
+        done();
+    });
+    test('should not throw exceptions if no callback provided', function(done){
+        done();
+    });
 })
