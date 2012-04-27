@@ -58,6 +58,12 @@ suite('chatRoom.addMessage', function(){
             done();
         });
     });
+    test('should return a promise', function(done){
+        var result = this.room.addMessage('cjno', 'message');
+        assert.isObject(result);
+        assert.isFunction(result.then);
+        done();
+    });
 });
 
 suite('chatRoom.getMessagesSince', function(){

@@ -1,4 +1,6 @@
-var util = require('util');
+var util = require('util'),
+    Promise = require('node-promise').Promise,
+    id = 0;
 
 var chatRoom = {
     addMessage : function(user, message, callback){
@@ -23,6 +25,8 @@ var chatRoom = {
                 callback(err, data);
             }
         }.bind(this));
+
+       return new Promise();
     },
     getMessagesSince : function(id, callback){
         if(!this.messages)
