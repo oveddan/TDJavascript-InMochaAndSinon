@@ -32,8 +32,8 @@ suite('chatRoom.addMessage', function(){
        this.room.addMessage('cjno', txt, function(err, msg){
           assert.isObject(msg);
           assert.isNumber(msg.id);
-          assert.equal(txt, msg.message);
-          assert.equal('cjno', msg.user);
+          assert.equal(msg.message ,txt);
+          assert.equal(msg.user, 'cjno');
           done();
        });
     });
