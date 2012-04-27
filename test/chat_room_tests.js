@@ -2,6 +2,13 @@ var chatRoom = require('./../chapp/chat_room'),
     assert = require('chai').assert,
     all = require('node-promise').all;
 
+suite('chatRoom', function(){
+    test('should be event emitter', function(){
+        assert.isFunction(chatRoom.addListener);
+        assert.isFunction(chatRoom.emit);
+    });
+});
+
 suite('chatRoom.addMessage', function(){
    setup(function(){
       this.room = Object.create(chatRoom),
