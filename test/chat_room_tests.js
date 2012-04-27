@@ -46,6 +46,18 @@ suite('chatRoom.addMessage', function(){
            });
        }.bind(this));
     });
+    test('should be asynchronous', function(done){
+        var id;
+
+        this.room.addMessage('cjno', 'Hey', function(err, msg){
+            id = msg.id
+        });
+
+        this.room.getMessagesSince(id - 1, function(err, msgs){
+            assert.equal(msgs.length, 0);
+            done();
+        });
+    });
 });
 
 suite('chatRoom.getMessagesSince', function(){
