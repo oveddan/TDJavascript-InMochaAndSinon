@@ -38,12 +38,25 @@ suite('chatRoomController.post', function(){
        assert.equal(JSON.parse.args[0], stringData);
        done();
    });
+   test('should add message from request body', function(done){
+       var data = { data : { user: 'cjno', message: 'hi'}};
+       this.controller.post();
+       this.req.emit('data', encodeURI(JSON.stringify(data)));
+       this.req.emit('end');
+
+       assert.isTrue(this.controller.chatRoom.addMessage.called);
+       var args = this.controller.chatRoom.addMessage.args;
+       assert.equal(args[0][0], data.data.user);
+       assert.equal(args[0][1], data.data.message);
+       done();
+   });
 });
 
 function controllerSetup(){
     var req = this.req = new EventEmitter();
     var res = this.res = {};
     this.controller = chatRoomController.create(req, res);
+    this.controller.chatRoom = { addMessage : sinon.spy() };
     this.jsonParse = JSON.parse;
 }
 
