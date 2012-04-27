@@ -37,4 +37,13 @@ suite('chatRoom.addMessage', function(){
           done();
        });
     });
+    test('should assign unique ids to messages', function(done){
+       var user = 'cjno';
+       this.room.addMessage(user, 'a', function(err, msg1){
+           this.room.addMessage(user, 'b', function(err, msg2){
+               assert.notEqual(msg1.id, msg2.id);
+               done();
+           });
+       }.bind(this));
+    });
 });
