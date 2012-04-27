@@ -4,6 +4,7 @@ var util = require('util'),
 
 var chatRoom = {
     addMessage : function(user, message, callback){
+        var promise = new Promise();
         process.nextTick(function(){
             var err = null;
             if(!user)
@@ -24,9 +25,13 @@ var chatRoom = {
             if(typeof callback == 'function'){
                 callback(err, data);
             }
+
+            if(err)
+                promise.reject(err, true);
+
         }.bind(this));
 
-       return new Promise();
+       return promise;
     },
     getMessagesSince : function(id, callback){
         if(!this.messages)

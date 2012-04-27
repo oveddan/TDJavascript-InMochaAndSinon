@@ -6,7 +6,9 @@ suite('chatRoom.addMessage', function(){
       this.room = Object.create(chatRoom);
    });
    test('should require username', function(done){
-       this.room.addMessage(null, 'a message', function(err){
+       var promise = this.room.addMessage(null, 'a message');
+
+       promise.then(function() {}, function(err){
            assert.isNotNull(err);
            assert.instanceOf(err, TypeError);
            done();
