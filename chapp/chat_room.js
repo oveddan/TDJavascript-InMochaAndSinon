@@ -45,7 +45,17 @@ chatRoom.getMessagesSince = function(id){
 };
 
 chatRoom.waitForMessagesSince = function(id){
-    return this.getMessagesSince(id);
+    var promise = new Promise();
+
+    this.getMessagesSince(id).then(function(messages){
+       if(messages.length > 0){
+           promise.resolve(messages);
+       } else {
+           this.addListener('message', function() {});
+       }
+    }.bind(this));
+
+    return promise;
 }
 
 module.exports = chatRoom;

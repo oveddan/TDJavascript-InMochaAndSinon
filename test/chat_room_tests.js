@@ -175,4 +175,18 @@ suite('chatRoom.waitForMessagesSince', function(){
           done();
        });
    });
+   test('should add listener when no messages', function(done){
+      this.room.addListener = sinon.stub();
+      var promise = new Promise();
+      promise.resolve([]);
+      this.room.getMessagesSince = sinon.stub().returns(promise);
+
+       this.room.waitForMessagesSince(0);
+
+       process.nextTick(function(){
+          assert.equal(this.room.addListener.args[0][0], 'message');
+          assert.isFunction(this.room.addListener.args[0][1]);
+          done();
+       }.bind(this));
+   });
 });
