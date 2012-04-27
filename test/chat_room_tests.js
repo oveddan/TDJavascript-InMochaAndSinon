@@ -43,8 +43,8 @@ suite('chatRoom.addMessage', function(){
     });
     test('should assign unique ids to messages', function(done){
        var user = 'cjno';
-       this.room.addMessage(user, 'a', function(err, msg1){
-           this.room.addMessage(user, 'b', function(err, msg2){
+       this.room.addMessage(user, 'a').then(function(msg1){
+           this.room.addMessage(user, 'b').then(function(msg2){
                assert.notEqual(msg1.id, msg2.id);
                done();
            });
@@ -53,7 +53,7 @@ suite('chatRoom.addMessage', function(){
     test('should be asynchronous', function(done){
         var id;
 
-        this.room.addMessage('cjno', 'Hey', function(err, msg){
+        this.room.addMessage('cjno', 'Hey').then(function(msg){
             id = msg.id
         });
 
