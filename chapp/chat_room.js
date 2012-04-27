@@ -28,15 +28,11 @@ var chatRoom = {
 
        return promise;
     },
-    getMessagesSince : function(id, callback){
+    getMessagesSince : function(id){
         var promise = new Promise();
         process.nextTick(function(){
             if(!this.messages)
                 this.messages = [];
-
-            if(typeof callback == 'function'){
-                callback(null, this.messages.slice(id));
-            }
 
             promise.resolve(this.messages.slice(id));
         }.bind(this));
