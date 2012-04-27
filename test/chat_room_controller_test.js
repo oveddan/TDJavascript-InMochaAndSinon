@@ -24,24 +24,31 @@ suite('chatRoomController.create', function(){
 });
 
 suite('chatRoomController.post', function(){
-   setup(function(){
-       this.jsonParse = JSON.parse;
-   });
-   teardown(function(){
-       JSON.parse = this.jsonParse;
-   });
+   setup(controllerSetup);
+   teardown(controllerTearDown);
    test('should parse request body as JSON', function(done){
-      var req = new EventEmitter();
-      var controller = chatRoomController.create(req, {});
       var data = { data : { user: 'cjno', message: 'hi'}};
       var stringData = JSON.stringify(data);
       var str = encodeURI(stringData);
        JSON.parse = sinon.stub().returns(data);
-       controller.post();
-       req.emit('data', str.substring(0, str.length/2));
-       req.emit('data', str.substring(str.length / 2));
-       req.emit('end');
+       this.controller.post();
+       this.req.emit('data', str.substring(0, str.length/2));
+       this.req.emit('data', str.substring(str.length / 2));
+       this.req.emit('end');
        assert.equal(JSON.parse.args[0], stringData);
        done();
    });
 });
+
+function controllerSetup(){
+    var req = this.req = new EventEmitter();
+    var res = this.res = {};
+    this.controller = chatRoomController.create(req, res);
+    this.jsonParse = JSON.parse;
+}
+
+function controllerTearDown(){
+    JSON.parse = this.jsonParse;
+}
+
+
