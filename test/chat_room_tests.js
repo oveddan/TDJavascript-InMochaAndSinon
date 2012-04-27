@@ -189,4 +189,20 @@ suite('chatRoom.waitForMessagesSince', function(){
           done();
        }.bind(this));
    });
+   test('new message should resolve waiting', function(done){
+      var user = 'cjno',
+          msg = 'Are you waiting for this?';
+
+       this.room.waitForMessagesSince(0).then(function(msgs){
+          assert.isArray(msgs);
+          assert.equal(msgs.length, 1);
+          assert.equal(msgs[0].user, user);
+          assert.equal(msgs[0].message, msg);
+           done();
+       });
+
+       process.nextTick(function(){
+          this.room.addMessage(user, msg);
+       }.bind(this));
+   });
 });
