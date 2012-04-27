@@ -33,7 +33,7 @@ suite('chatRoom.addMessage', function(){
     });
     test('should call callback with new object', function(done){
        var txt = 'Some message';
-       this.room.addMessage('cjno', txt, function(err, msg){
+       this.room.addMessage('cjno', txt).then(function(msg){
           assert.isObject(msg);
           assert.isNumber(msg.id);
           assert.equal(msg.message ,txt);

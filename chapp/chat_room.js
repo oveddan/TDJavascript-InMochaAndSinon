@@ -20,6 +20,7 @@ var chatRoom = {
                 var id = this.messages.length + 1;
                 data = {id : id++, user : user, message : message};
                 this.messages.push(data);
+                promise.resolve(data);
             }
 
             if(typeof callback == 'function'){
