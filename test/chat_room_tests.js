@@ -90,14 +90,16 @@ suite('chatRoom.getMessagesSince', function(){
     });
     test('should get message since given id', function(done){
         var self = this;
-        self.room.addMessage(self.user, 'msg').then(function(first){
-            self.room.addMessage(self.user, 'msg2').then(function(second){
-                self.room.getMessagesSince(first.id, function(e, msgs){
-                   assert.isArray(msgs);
-                   assert.deepEqual(msgs, [second]);
-                   done();
-               });
-            });
+        var self = this;
+        var add = all(self.room.addMessage(self.user, 'msg').then(self.collect),
+            self.room.addMessage(self.user, 'msg2').then(self.collect));
+
+        add.then(function(){
+            self.room.getMessagesSince(self.messages[0].id, function(e, msgs){
+               assert.isArray(msgs);
+               assert.deepEqual(msgs, [self.messages[1]]);
+               done();
+           });
         });
     });
     test('should yield an empty array if messages array does not exist', function(done){
