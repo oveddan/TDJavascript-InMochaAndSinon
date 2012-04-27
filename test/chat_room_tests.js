@@ -15,7 +15,9 @@ suite('chatRoom.addMessage', function(){
        });
     });
     test('should require message', function(done){
-        this.room.addMessage('dan', null, function(err){
+        var promise = this.room.addMessage('dan', null);
+
+        promise.then(function() {}, function(err){
             assert.isNotNull(err);
             assert.instanceOf(err, TypeError);
             done();
