@@ -88,8 +88,14 @@ suite('chatRoom.getMessagesSince', function(){
     teardown(function(){
         this.messages = null;
     });
+    test('should return promise', function(done){
+        var result = this.room.getMessagesSince(20);
+
+        assert.isObject(result);
+        assert.isFunction(result.then);
+        done();
+    });
     test('should get message since given id', function(done){
-        var self = this;
         var self = this;
         var add = all(self.room.addMessage(self.user, 'msg').then(self.collect),
             self.room.addMessage(self.user, 'msg2').then(self.collect));
