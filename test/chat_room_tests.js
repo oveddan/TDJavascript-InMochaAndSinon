@@ -82,6 +82,18 @@ suite('chatRoom.addMessage', function(){
         assert.isFunction(result.then);
         done();
     });
+    test("should emit 'message' event", function(done){
+       var message;
+
+        this.room.addListener('message', function(m){
+            message = m;
+        });
+
+        this.room.addMessage('cjno', 'msg').then(function(m){
+           assert.equal(m, message);
+           done();
+        });
+    });
 });
 
 suite('chatRoom.getMessagesSince', function(){
