@@ -1,5 +1,4 @@
-var util = require('util'),
-    id = 0;
+var util = require('util');
 
 var chatRoom = {
     addMessage : function(user, message, callback){
@@ -11,12 +10,20 @@ var chatRoom = {
 
         var data;
         if(!err){
+            if(!this.messages)
+                this.messages = [];
+
+            var id = this.messages.length + 1;
             data = {id : id++, user : user, message : message};
+            this.messages.push(data);
         }
 
         if(typeof callback == 'function'){
             callback(err, data);
         }
+    },
+    getMessagesSince : function(id, callback){
+        callback(null, this.messages.slice(id));
     }
 }
 

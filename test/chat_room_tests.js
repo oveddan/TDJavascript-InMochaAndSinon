@@ -47,3 +47,19 @@ suite('chatRoom.addMessage', function(){
        }.bind(this));
     });
 });
+
+suite('chatRoom.getMessagesSince', function(){
+    test('should get message since given id', function(done){
+       var room = Object.create(chatRoom),
+           user = 'cjno';
+        room.addMessage(user, 'msg', function(e, first){
+           room.addMessage(user, 'msg2', function(e, second){
+               room.getMessagesSince(first.id, function(e, msgs){
+                   assert.isArray(msgs);
+                   assert.deepEqual(msgs, [second]);
+                   done();
+               })
+            });
+        });
+    });
+})
