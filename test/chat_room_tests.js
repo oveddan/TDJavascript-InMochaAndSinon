@@ -4,7 +4,13 @@ var chatRoom = require('./../chapp/chat_room'),
 
 suite('chatRoom.addMessage', function(){
    setup(function(){
-      this.room = Object.create(chatRoom);
+      this.room = Object.create(chatRoom),
+      this.messages = [];
+      var self = this;
+      this.collect = function(msg) { self.messages.push(msg); }
+   });
+   teardown(function(){
+       this.messages = null;
    });
    test('should require username', function(done){
        var promise = this.room.addMessage(null, 'a message');
@@ -43,14 +49,11 @@ suite('chatRoom.addMessage', function(){
        });
     });
     test('should assign unique ids to messages', function(done){
-       var user = 'cjno',
-           room = this.room,
-           messages = [],
-           collect = function(msg) { messages.push(msg)};
-        var add = all(room.addMessage('u', 'a').then(collect),
-                    room.addMessage('u', 'b').then(collect));
+        var self = this;
+        var add = all(this.room.addMessage('u', 'a').then(this.collect),
+                this.room.addMessage('u', 'b').then(this.collect));
         add.then(function(){
-            assert.notEqual(messages[0].id, messages[1].id);
+            assert.notEqual(self.messages[0].id, self.messages[1].id);
             done();
         });
     });
