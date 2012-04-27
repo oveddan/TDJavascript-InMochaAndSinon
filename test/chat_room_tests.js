@@ -49,12 +49,15 @@ suite('chatRoom.addMessage', function(){
 });
 
 suite('chatRoom.getMessagesSince', function(){
+    setup(function(){
+        this.room = Object.create(chatRoom),
+        this.user = 'cjno';
+    });
     test('should get message since given id', function(done){
-       var room = Object.create(chatRoom),
-           user = 'cjno';
-        room.addMessage(user, 'msg', function(e, first){
-           room.addMessage(user, 'msg2', function(e, second){
-               room.getMessagesSince(first.id, function(e, msgs){
+        var self = this;
+        self.room.addMessage(self.user, 'msg', function(e, first){
+            self.room.addMessage(self.user, 'msg2', function(e, second){
+                self.room.getMessagesSince(first.id, function(e, msgs){
                    assert.isArray(msgs);
                    assert.deepEqual(msgs, [second]);
                    done();
