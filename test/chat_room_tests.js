@@ -1,5 +1,6 @@
 var chatRoom = require('./../chapp/chat_room'),
-    assert = require('chai').assert;
+    assert = require('chai').assert,
+    all = require('node-promise').all;
 
 suite('chatRoom.addMessage', function(){
    setup(function(){
@@ -42,13 +43,16 @@ suite('chatRoom.addMessage', function(){
        });
     });
     test('should assign unique ids to messages', function(done){
-       var user = 'cjno';
-       this.room.addMessage(user, 'a').then(function(msg1){
-           this.room.addMessage(user, 'b').then(function(msg2){
-               assert.notEqual(msg1.id, msg2.id);
-               done();
-           });
-       }.bind(this));
+       var user = 'cjno',
+           room = this.room,
+           messages = [],
+           collect = function(msg) { messages.push(msg)};
+        var add = all(room.addMessage('u', 'a').then(collect),
+                    room.addMessage('u', 'b').then(collect));
+        add.then(function(){
+            assert.notEqual(messages[0].id, messages[1].id);
+            done();
+        });
     });
     test('should be asynchronous', function(done){
         var id;
