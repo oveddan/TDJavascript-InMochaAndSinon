@@ -3,7 +3,7 @@ var util = require('util'),
     id = 0;
 
 var chatRoom = {
-    addMessage : function(user, message, callback){
+    addMessage : function(user, message){
         var promise = new Promise();
         process.nextTick(function(){
             var err = null;
@@ -21,13 +21,7 @@ var chatRoom = {
                 data = {id : id++, user : user, message : message};
                 this.messages.push(data);
                 promise.resolve(data);
-            }
-
-            if(typeof callback == 'function'){
-                callback(err, data);
-            }
-
-            if(err)
+            } else
                 promise.reject(err, true);
 
         }.bind(this));
