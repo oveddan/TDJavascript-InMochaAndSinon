@@ -77,8 +77,8 @@ suite('chatRoom.getMessagesSince', function(){
     });
     test('should get message since given id', function(done){
         var self = this;
-        self.room.addMessage(self.user, 'msg', function(e, first){
-            self.room.addMessage(self.user, 'msg2', function(e, second){
+        self.room.addMessage(self.user, 'msg').then(function(first){
+            self.room.addMessage(self.user, 'msg2').then(function(second){
                 self.room.getMessagesSince(first.id, function(e, msgs){
                    assert.isArray(msgs);
                    assert.deepEqual(msgs, [second]);
@@ -96,8 +96,8 @@ suite('chatRoom.getMessagesSince', function(){
     });
     test('should yield an empty array if no relevant messages exist', function(done){
         var self = this;
-        self.room.addMessage(self.user, 'msg', function(e, first){
-            self.room.addMessage(self.user, 'msg2', function(e, second){
+        self.room.addMessage(self.user, 'msg').then(function(first){
+            self.room.addMessage(self.user, 'msg2').then(function(second){
                 self.room.getMessagesSince(second.id, function(e, msgs){
                     assert.isArray(msgs);
                     assert.length(msgs, 0);
@@ -108,7 +108,7 @@ suite('chatRoom.getMessagesSince', function(){
     });
     test('should not throw exceptions if no callback provided', function(done){
         var self = this;
-        self.room.addMessage(self.user, 'msg2', function(e, second){
+        self.room.addMessage(self.user, 'msg2').then(function(second){
             assert.doesNotThrow(function(){
                 self.room.getMessagesSince(second.id);
                 done();
