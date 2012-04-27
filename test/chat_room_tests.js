@@ -81,6 +81,12 @@ suite('chatRoom.getMessagesSince', function(){
     setup(function(){
         this.room = Object.create(chatRoom),
         this.user = 'cjno';
+        this.messages = [];
+        var self = this;
+        this.collect = function(msg) { self.messages.push(msg); }
+    });
+    teardown(function(){
+        this.messages = null;
     });
     test('should get message since given id', function(done){
         var self = this;
@@ -103,13 +109,14 @@ suite('chatRoom.getMessagesSince', function(){
     });
     test('should yield an empty array if no relevant messages exist', function(done){
         var self = this;
-        self.room.addMessage(self.user, 'msg').then(function(first){
-            self.room.addMessage(self.user, 'msg2').then(function(second){
-                self.room.getMessagesSince(second.id, function(e, msgs){
-                    assert.isArray(msgs);
-                    assert.length(msgs, 0);
-                    done();
-                }) ;
+        var add = all(self.room.addMessage(self.user, 'msg').then(self.collect),
+            self.room.addMessage(self.user, 'msg2').then(self.collect));
+
+        add.then(function(){
+            self.room.getMessagesSince(self.messages[1].id, function(e, msgs){
+                assert.isArray(msgs);
+                assert.length(msgs, 0);
+                done();
             });
         });
     });
