@@ -32,17 +32,14 @@ suite('chatRoomController.post', function(){
       var str = encodeURI(stringData);
        JSON.parse = sinon.stub().returns(data);
        this.controller.post();
-       this.req.emit('data', str.substring(0, str.length/2));
-       this.req.emit('data', str.substring(str.length / 2));
-       this.req.emit('end');
+       this.sendRequest(data);
        assert.equal(JSON.parse.args[0], stringData);
        done();
    });
    test('should add message from request body', function(done){
        var data = { data : { user: 'cjno', message: 'hi'}};
        this.controller.post();
-       this.req.emit('data', encodeURI(JSON.stringify(data)));
-       this.req.emit('end');
+       this.sendRequest(data);
 
        assert.isTrue(this.controller.chatRoom.addMessage.called);
        var args = this.controller.chatRoom.addMessage.args;
@@ -58,6 +55,13 @@ function controllerSetup(){
     this.controller = chatRoomController.create(req, res);
     this.controller.chatRoom = { addMessage : sinon.spy() };
     this.jsonParse = JSON.parse;
+
+    this.sendRequest = function(data){
+        var str = encodeURI(JSON.stringify(data));
+        this.req.emit('data', str.substring(0, str.length / 2));
+        this.req.emit('data', str.substring(str.length / 2));
+        this.req.emit('end');
+    }
 }
 
 function controllerTearDown(){
