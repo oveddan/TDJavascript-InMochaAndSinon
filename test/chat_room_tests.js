@@ -64,8 +64,8 @@ suite('chatRoom.addMessage', function(){
             id = msg.id
         });
 
-        this.room.getMessagesSince(id - 1, function(err, msgs){
-            assert.equal(msgs.length, 0);
+        this.room.getMessagesSince(id - 1).then(function(msgs){
+            assert.equal(msgs.length, 1);
             done();
         });
     });

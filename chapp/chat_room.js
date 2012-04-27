@@ -29,16 +29,19 @@ var chatRoom = {
        return promise;
     },
     getMessagesSince : function(id, callback){
-        //process.nextTick(function(){
+        var promise = new Promise();
+        process.nextTick(function(){
             if(!this.messages)
                 this.messages = [];
 
             if(typeof callback == 'function'){
                 callback(null, this.messages.slice(id));
             }
-        //}.bind(this));
 
-        return new Promise();
+            promise.resolve(this.messages.slice(id));
+        }.bind(this));
+
+        return promise;
     }
 }
 
