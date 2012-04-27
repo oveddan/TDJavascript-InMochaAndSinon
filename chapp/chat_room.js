@@ -4,8 +4,10 @@ var chatRoom = {
     addMessage : function(user, message, callback){
         if(!user)
             callback(new TypeError('user is null'));
+        else if(!message)
+            callback(new TypeError('message is null'));
         else
-            util.put(user + ": " + message);
+            console.log(user + ": " + message);
     }
 }
 

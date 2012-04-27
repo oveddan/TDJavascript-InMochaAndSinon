@@ -11,4 +11,13 @@ suite('chatRoom.addMessage', function(){
            done();
        });
     });
+    test('should require message', function(done){
+        var room = Object.create(chatRoom);
+
+        room.addMessage('dan', null, function(err){
+            assert.isNotNull(err);
+            assert.instanceOf(err, TypeError);
+            done();
+        });
+    });
 });
