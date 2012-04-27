@@ -101,7 +101,7 @@ suite('chatRoom.getMessagesSince', function(){
             self.room.addMessage(self.user, 'msg2').then(self.collect));
 
         add.then(function(){
-            self.room.getMessagesSince(self.messages[0].id, function(e, msgs){
+            self.room.getMessagesSince(self.messages[0].id).then(function(msgs){
                assert.isArray(msgs);
                assert.deepEqual(msgs, [self.messages[1]]);
                done();
@@ -109,7 +109,7 @@ suite('chatRoom.getMessagesSince', function(){
         });
     });
     test('should yield an empty array if messages array does not exist', function(done){
-        this.room.getMessagesSince(0, function(e, msgs){
+        this.room.getMessagesSince(0).then(function(msgs){
             assert.isArray(msgs);
             assert.length(msgs, 0);
             done();
@@ -121,7 +121,7 @@ suite('chatRoom.getMessagesSince', function(){
             self.room.addMessage(self.user, 'msg2').then(self.collect));
 
         add.then(function(){
-            self.room.getMessagesSince(self.messages[1].id, function(e, msgs){
+            self.room.getMessagesSince(self.messages[1].id).then(function(msgs){
                 assert.isArray(msgs);
                 assert.length(msgs, 0);
                 done();
