@@ -43,15 +43,24 @@ suite('chatRoomController.post', function(){
 
        assert.isTrue(this.controller.chatRoom.addMessage.called);
        var args = this.controller.chatRoom.addMessage.args;
-       assert.equal(args[0][0], data.data.user);
-       assert.equal(args[0][1], data.data.message);
+       assert.equal(data.data.user, args[0][0]);
+       assert.equal(data.data.message, args[0][1]);
+       done();
+   });
+   test('should write status header', function(done){
+       var data = { data : { user: 'cjno', message: 'hi'}};
+       this.controller.post();
+       this.sendRequest(data);
+
+       assert.isTrue(this.res.writeHead.called);
+       assert.equal(201, this.res.writeHead.args[0][0], 201);
        done();
    });
 });
 
 function controllerSetup(){
     var req = this.req = new EventEmitter();
-    var res = this.res = {};
+    var res = this.res = { writeHead : sinon.spy() };
     this.controller = chatRoomController.create(req, res);
     this.controller.chatRoom = { addMessage : sinon.spy() };
     this.jsonParse = JSON.parse;

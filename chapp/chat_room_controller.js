@@ -15,6 +15,7 @@ var chatRoomController = {
         this.request.addListener('end', function(){
            var data = JSON.parse(decodeURI(body)).data;
            this.chatRoom.addMessage(data.user, data.message);
+            this.response.writeHead(201);
         }.bind(this));
     }
 };
