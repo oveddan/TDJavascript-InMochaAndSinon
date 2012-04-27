@@ -66,7 +66,11 @@ suite('chatRoom.getMessagesSince', function(){
         });
     });
     test('should yield an empty array if messages array does not exist', function(done){
-        done();
+        this.room.getMessagesSince(0, function(e, msgs){
+            assert.isArray(msgs);
+            assert.length(msgs, 0);
+            done();
+        })
     });
     test('should yield an empty array if no relevant messages exist', function(done){
         done();

@@ -23,6 +23,9 @@ var chatRoom = {
         }
     },
     getMessagesSince : function(id, callback){
+        if(!this.messages)
+            this.messages = [];
+
         callback(null, this.messages.slice(id));
     }
 }
