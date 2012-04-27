@@ -36,12 +36,12 @@ suite('chatRoomController.post', function(){
       var data = { data : { user: 'cjno', message: 'hi'}};
       var stringData = JSON.stringify(data);
       var str = encodeURI(stringData);
-      JSON.parse = sinon.stub.returns(data);
+       JSON.parse = sinon.stub().returns(data);
        controller.post();
        req.emit('data', str.substring(0, str.length/2));
        req.emit('data', str.substring(str.length / 2));
        req.emit('end');
-       assert.equals(JSON.parse.args[0], stringData);
+       assert.equal(JSON.parse.args[0], stringData);
        done();
    });
 });
