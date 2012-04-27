@@ -2,12 +2,15 @@ var util = require('util');
 
 var chatRoom = {
     addMessage : function(user, message, callback){
+        var err = null;
         if(!user)
-            callback(new TypeError('user is null'));
+            err = new TypeError('user is null');
         else if(!message)
-            callback(new TypeError('message is null'));
-        else
-            console.log(user + ": " + message);
+            err = new TypeError('message is null');
+
+        if(typeof callback == 'function'){
+            callback(err);
+        }
     }
 }
 

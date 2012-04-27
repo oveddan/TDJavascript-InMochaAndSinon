@@ -19,4 +19,12 @@ suite('chatRoom.addMessage', function(){
             done();
         });
     });
+    test('should not require a callback', function(done){
+        var err = null;
+
+        assert.doesNotThrow(function(){
+           this.room.addMessage();
+           done();
+        }.bind(this));
+    });
 });
