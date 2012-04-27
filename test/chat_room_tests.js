@@ -1,6 +1,8 @@
 var chatRoom = require('./../chapp/chat_room'),
     assert = require('chai').assert,
-    all = require('node-promise').all;
+    all = require('node-promise').all,
+    Promise = require('node-promise').Promise,
+    sinon = require('sinon');
 
 suite('chatRoom', function(){
     test('should be event emitter', function(){
@@ -156,4 +158,21 @@ suite('chatRoom.getMessagesSince', function(){
             });
         });
     });
-})
+});
+
+suite('chatRoom.waitForMessagesSince', function(){
+   setup(function(){
+       this.room = Object.create(chatRoom);
+   });
+   test('should yield existing messages', function(done){
+      var promise = new Promise();
+       var data = [{id: 43}];
+      promise.resolve(data);
+       this.room.getMessagesSince = sinon.stub().returns(promise);
+
+       this.room.waitForMessagesSince(42).then(function(m){
+          assert.equal(data, m);
+          done();
+       });
+   });
+});
