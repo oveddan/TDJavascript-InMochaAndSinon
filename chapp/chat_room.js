@@ -26,7 +26,9 @@ var chatRoom = {
         if(!this.messages)
             this.messages = [];
 
-        callback(null, this.messages.slice(id));
+        if(typeof callback == 'function'){
+            callback(null, this.messages.slice(id));
+        }
     }
 }
 
