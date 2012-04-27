@@ -27,4 +27,14 @@ suite('chatRoom.addMessage', function(){
            done();
         }.bind(this));
     });
+    test('should call callback with new object', function(done){
+       var txt = 'Some message';
+       this.room.addMessage('cjno', txt, function(err, msg){
+          assert.isObject(msg);
+          assert.isNumber(msg.id);
+          assert.equal(txt, msg.message);
+          assert.equal('cjno', msg.user);
+          done();
+       });
+    });
 });
