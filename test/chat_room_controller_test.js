@@ -56,11 +56,19 @@ suite('chatRoomController.post', function(){
        assert.equal(201, this.res.writeHead.args[0][0], 201);
        done();
    });
+   test('should close connection', function(done){
+       var data = { data : { user: 'cjno', message: 'hi'}};
+       this.controller.post();
+       this.sendRequest(data);
+
+       assert.isTrue(this.res.end.called);
+       done();
+   });
 });
 
 function controllerSetup(){
     var req = this.req = new EventEmitter();
-    var res = this.res = { writeHead : sinon.spy() };
+    var res = this.res = { writeHead : sinon.spy(), end : sinon.spy() };
     this.controller = chatRoomController.create(req, res);
     this.controller.chatRoom = { addMessage : sinon.spy() };
     this.jsonParse = JSON.parse;
