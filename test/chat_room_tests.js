@@ -205,4 +205,19 @@ suite('chatRoom.waitForMessagesSince', function(){
           this.room.addMessage(user, msg);
        }.bind(this));
    });
+   test("new 'message' listener should be removed after message sent", function(done){
+       var user = 'cjno',
+           msg = 'Are you waiting for this?';
+
+       var originalListenersLength = this.room.listeners('message').length;
+
+       this.room.waitForMessagesSince(0).then(function(msgs){
+           assert.equal(this.room.listeners('message').length, originalListenersLength);
+           done();
+       }.bind(this));
+
+       process.nextTick(function(){
+           this.room.addMessage(user, msg);
+       }.bind(this));
+   });
 });
