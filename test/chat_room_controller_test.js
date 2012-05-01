@@ -79,6 +79,23 @@ suite('chatRoomController.post', function(){
    });
 });
 
+suite('chatRoomController.get', function(){
+    setup(controllerSetup);
+    teardown(controllerTearDown);
+
+    test('should wait for any message', function(done){
+       this.req.headers = {'x-access-token': ''};
+        var chatRoom = this.controller.chatRoom;
+        chatRoom.waitForMessagesSince = sinon.spy();
+
+        this.controller.get();
+
+        assert.isTrue(chatRoom.waitForMessagesSince.called);
+        assert.equal(chatRoom.waitForMessagesSince.args[0][0], 0);
+        done();
+    });
+});
+
 function controllerSetup(){
     var req = this.req = new EventEmitter();
     var res = this.res = { writeHead : sinon.spy(), end : sinon.spy() };

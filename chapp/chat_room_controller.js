@@ -7,6 +7,9 @@ var chatRoomController = {
             response : {value : response}
         });
     },
+    get : function(){
+        this.chatRoom.waitForMessagesSince(0);
+    },
     post : function(){
         var body = '';
         this.request.addListener('data', function(chunk){
