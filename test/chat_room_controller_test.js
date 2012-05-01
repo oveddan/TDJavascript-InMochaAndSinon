@@ -170,15 +170,22 @@ suite('chatRoomController.respond', function(){
         assert.isDefined(arg);
         assert.equal(arg, msgsString.length);
     });
-    test('should encode response data as json in the body', function(done){
-        done();//this.controller.respond
+    test('should encode response data as json in the body', function(){
+        var msgs = [{user : 'cjno', message : 'hi'}];
+        this.controller.respond(201, msgs);
+
+        var msgsString = JSON.stringify(msgs);
+
+        assert.isTrue(this.res.write.called);
+        assert.isDefined(this.res.write.args[0][0]);
+        assert.equal(this.res.write.args[0][0], msgsString);
     });
 });
 
 function controllerSetup(){
     var req = this.req = new EventEmitter();
     req.headers = {'x-access-token' : ''};
-    var res = this.res = { writeHead : sinon.spy(), end : sinon.spy() };
+    var res = this.res = { writeHead : sinon.spy(), end : sinon.spy(), write : sinon.spy() };
     this.controller = chatRoomController.create(req, res);
 
     var add = this.addMessagePromise = new Promise();

@@ -38,6 +38,7 @@ var chatRoomController = {
             'Content-Type' : 'application/json',
             'Content-Length' : strData.length
         });
+        this.response.write(strData);
         this.response.end();
     }
 };
