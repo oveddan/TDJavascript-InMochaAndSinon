@@ -115,6 +115,22 @@ suite('chatRoomController.get', function(){
            done();
         }.bind(this));
     });
+
+    test('should respond with formatted data', function(done){
+        this.controller.respond = sinon.stub();
+        var messages = [{user : 'cjno', message : 'hi'}];
+        this.waitForMessagesPromise.resolve(messages);
+
+        this.controller.get();
+
+        process.nextTick(function(){
+            assert.isTrue(this.controller.respond.called);
+            var args = this.controller.respond.args;
+            assert.equal(args[0][0], 200);
+            assert.equal(args[0][1].message, messages);
+            done();
+        }.bind(this));
+    });
 });
 
 suite('chatRoomController.respond', function(){
@@ -133,20 +149,17 @@ suite('chatRoomController.respond', function(){
         assert.isTrue(this.res.end.called);
     });
 
-    test('should respond with formatted data', function(done){
-        this.controller.respond = sinon.stub();
-        var messages = [{user : 'cjno', message : 'hi'}];
-        this.waitForMessagesPromise.resolve(messages);
+    test('should write content type of json in response', function(){
+        this.controller.respond(201, {});
 
-        this.controller.get();
-
-        process.nextTick(function(){
-            assert.isTrue(this.controller.respond.called);
-            var args = this.controller.respond.args;
-            assert.equal(args[0][0], 200);
-            assert.equal(args[0][1].message, messages);
-            done();
-        }.bind(this));
+        assert.isTrue(this.res.writeHead.called);
+        assert.isNotNull(this.res.writeHead.args[0][1]);
+        var arg = this.res.writeHead.args[0][1]['Content-Type'];
+        assert.isNotNull(arg);
+        assert.equal(arg, 'application/json');
+    });
+    test('should encode response data as json in the body', function(done){
+        done();//this.controller.respond
     });
 });
 

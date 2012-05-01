@@ -33,7 +33,9 @@ var chatRoomController = {
         }.bind(this));
     },
     respond : function(status){
-        this.response.writeHead(status);
+        this.response.writeHead(status, {
+            'Content-Type' : 'application/json'
+        });
         this.response.end();
     }
 };
