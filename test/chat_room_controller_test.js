@@ -1,7 +1,8 @@
 var chatRoomController = require('./../chapp/chat_room_controller'),
     assert = require('chai').assert,
     EventEmitter = require('events').EventEmitter,
-    sinon = require('sinon');
+    sinon = require('sinon'),
+    Promise = require('node-promise').Promise;
 
 suite('chatRoomController', function(){
     test('should be object', function(){
@@ -47,22 +48,27 @@ suite('chatRoomController.post', function(){
        assert.equal(data.data.message, args[0][1]);
        done();
    });
-   test('should write status header', function(done){
+   test('should write status header when addMessage resolves', function(done){
        var data = { data : { user: 'cjno', message: 'hi'}};
        this.controller.post();
        this.sendRequest(data);
+       this.addMessagePromise.resolve({});
 
-       assert.isTrue(this.res.writeHead.called);
-       assert.equal(201, this.res.writeHead.args[0][0], 201);
-       done();
+       process.nextTick(function(){
+           assert.isTrue(this.res.writeHead.called);
+           assert.equal(201, this.res.writeHead.args[0][0], 201);
+           done();
+       }.bind(this));
    });
-   test('should close connection', function(done){
+   test('should close connection when addMessage resolves', function(done){
        var data = { data : { user: 'cjno', message: 'hi'}};
        this.controller.post();
        this.sendRequest(data);
+       this.addMessagePromise.resolve({});
 
-       assert.isTrue(this.res.end.called);
-       done();
+       process.nextTick(function(){assert.isTrue(this.res.end.called);
+           done();
+       }.bind(this));
    });
 });
 
@@ -70,7 +76,8 @@ function controllerSetup(){
     var req = this.req = new EventEmitter();
     var res = this.res = { writeHead : sinon.spy(), end : sinon.spy() };
     this.controller = chatRoomController.create(req, res);
-    this.controller.chatRoom = { addMessage : sinon.spy() };
+    var promise = this.addMessagePromise = new Promise();
+    this.controller.chatRoom = { addMessage : sinon.stub().returns(promise) };
     this.jsonParse = JSON.parse;
 
     this.sendRequest = function(data){
