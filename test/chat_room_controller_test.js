@@ -94,6 +94,18 @@ suite('chatRoomController.get', function(){
         assert.equal(chatRoom.waitForMessagesSince.args[0][0], 0);
         done();
     });
+
+    test('should wait for messages since X-Access-Token', function(done){
+        this.req.headers = {'x-access-token': '2'};
+        var chatRoom = this.controller.chatRoom;
+        chatRoom.waitForMessagesSince = sinon.spy();
+
+        this.controller.get();
+
+        assert.isTrue(chatRoom.waitForMessagesSince.called);
+        assert.equal(chatRoom.waitForMessagesSince.args[0][0], 2);
+        done();
+    });
 });
 
 function controllerSetup(){
