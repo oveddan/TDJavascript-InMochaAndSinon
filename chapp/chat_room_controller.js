@@ -12,8 +12,11 @@ var chatRoomController = {
 
         var wait = this.chatRoom.waitForMessagesSince(id);
 
-        wait.then(function(msgs){
-            this.respond(200, {message : msgs});
+        wait.then(function(messages){
+            this.respond(200, {
+                message : messages,
+                token : messages[messages.length - 1].id
+            });
         }.bind(this));
     },
     post : function(){

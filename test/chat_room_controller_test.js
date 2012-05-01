@@ -103,6 +103,18 @@ suite('chatRoomController.get', function(){
         assert.equal(chatRoom.waitForMessagesSince.args[0][0], 2);
         done();
     });
+
+    test('should include token in response', function(done){
+        this.controller.respond = sinon.spy();
+        this.waitForMessagesPromise.resolve([{id:24},{id:25}]);
+
+        this.controller.get();
+
+        process.nextTick(function(){
+           assert.equal(this.controller.respond.args[0][1].token, 25);
+           done();
+        }.bind(this));
+    });
 });
 
 suite('chatRoomController.respond', function(){
