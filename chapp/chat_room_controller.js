@@ -32,9 +32,11 @@ var chatRoomController = {
            }.bind(this));
         }.bind(this));
     },
-    respond : function(status){
+    respond : function(status, messages){
+        var strData = JSON.stringify(messages) || "{}";
         this.response.writeHead(status, {
-            'Content-Type' : 'application/json'
+            'Content-Type' : 'application/json',
+            'Content-Length' : strData.length
         });
         this.response.end();
     }

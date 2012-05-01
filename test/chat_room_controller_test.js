@@ -153,10 +153,22 @@ suite('chatRoomController.respond', function(){
         this.controller.respond(201, {});
 
         assert.isTrue(this.res.writeHead.called);
-        assert.isNotNull(this.res.writeHead.args[0][1]);
+        assert.isDefined(this.res.writeHead.args[0][1]);
         var arg = this.res.writeHead.args[0][1]['Content-Type'];
-        assert.isNotNull(arg);
+        assert.isDefined(arg);
         assert.equal(arg, 'application/json');
+    });
+    test('should write content length in response', function(){
+        var msgs = [{user : 'cjno', message : 'hi'}];
+        this.controller.respond(201, msgs);
+
+        var msgsString = JSON.stringify(msgs);
+
+        assert.isTrue(this.res.writeHead.called);
+        assert.isDefined(this.res.writeHead.args[0][1]);
+        var arg = this.res.writeHead.args[0][1]['Content-Length'];
+        assert.isDefined(arg);
+        assert.equal(arg, msgsString.length);
     });
     test('should encode response data as json in the body', function(done){
         done();//this.controller.respond
