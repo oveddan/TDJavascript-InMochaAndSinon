@@ -108,6 +108,23 @@ suite('chatRoomController.get', function(){
     });
 });
 
+suite('chatRoomController.respond', function(){
+    setup(controllerSetup);
+    teardown(controllerTearDown);
+
+    test('should write status code', function(){
+       this.controller.respond(201);
+       assert.isTrue(this.res.writeHead.called);
+       assert.equal(this.res.writeHead.args[0][0], 201);
+    });
+
+    test('should close connection', function(){
+        this.controller.respond(201);
+
+        assert.isTrue(this.res.end.called);
+    });
+});
+
 function controllerSetup(){
     var req = this.req = new EventEmitter();
     var res = this.res = { writeHead : sinon.spy(), end : sinon.spy() };

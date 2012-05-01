@@ -23,6 +23,10 @@ var chatRoomController = {
                this.response.end();
            }.bind(this));
         }.bind(this));
+    },
+    respond : function(status){
+        this.response.writeHead(status);
+        this.response.end();
     }
 };
 
