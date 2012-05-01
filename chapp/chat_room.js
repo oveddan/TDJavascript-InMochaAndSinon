@@ -23,8 +23,6 @@ chatRoom.addMessage = function(user, message){
             data = {id : id++, user : user, message : message};
             this.messages.push(data);
             this.emit('message', data);
-            if(this.waitForMessagesSinceListener)
-                this.removeListener('message', this.waitForMessagesSinceListener);
             promise.resolve(data);
         } else
             promise.reject(err, true);
@@ -53,10 +51,11 @@ chatRoom.waitForMessagesSince = function(id){
        if(messages.length > 0){
            promise.resolve(messages);
        } else {
-           this.waitForMessagesSinceListener = function(message) {
+           var waitForMessagesSinceListener = function(message) {
                promise.resolve([message]);
+               this.removeListener('message', waitForMessagesSinceListener);
            };
-           this.addListener('message', this.waitForMessagesSinceListener);
+           this.addListener('message', waitForMessagesSinceListener);
        }
     }.bind(this));
 
