@@ -9,7 +9,12 @@ var chatRoomController = {
     },
     get : function(){
         var id = this.request.headers['x-access-token'] || 0;
-        this.chatRoom.waitForMessagesSince(id);
+
+        var wait = this.chatRoom.waitForMessagesSince(id);
+
+        wait.then(function(msgs){
+            this.respond(200, {message : msgs});
+        }.bind(this));
     },
     post : function(){
         var body = '';

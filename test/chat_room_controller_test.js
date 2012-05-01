@@ -86,8 +86,6 @@ suite('chatRoomController.get', function(){
     test('should wait for any message', function(done){
        this.req.headers = {'x-access-token': ''};
         var chatRoom = this.controller.chatRoom;
-        chatRoom.waitForMessagesSince = sinon.spy();
-
         this.controller.get();
 
         assert.isTrue(chatRoom.waitForMessagesSince.called);
@@ -98,7 +96,6 @@ suite('chatRoomController.get', function(){
     test('should wait for messages since X-Access-Token', function(done){
         this.req.headers = {'x-access-token': '2'};
         var chatRoom = this.controller.chatRoom;
-        chatRoom.waitForMessagesSince = sinon.spy();
 
         this.controller.get();
 
@@ -123,14 +120,38 @@ suite('chatRoomController.respond', function(){
 
         assert.isTrue(this.res.end.called);
     });
+
+    test('should respond with formatted data', function(done){
+        this.controller.respond = sinon.stub();
+        var messages = [{user : 'cjno', message : 'hi'}];
+        this.waitForMessagesPromise.resolve(messages);
+
+        this.controller.get();
+
+        process.nextTick(function(){
+            assert.isTrue(this.controller.respond.called);
+            var args = this.controller.respond.args;
+            assert.equal(args[0][0], 200);
+            assert.equal(args[0][1].message, messages);
+            done();
+        }.bind(this));
+    });
 });
 
 function controllerSetup(){
     var req = this.req = new EventEmitter();
+    req.headers = {'x-access-token' : ''};
     var res = this.res = { writeHead : sinon.spy(), end : sinon.spy() };
     this.controller = chatRoomController.create(req, res);
-    var promise = this.addMessagePromise = new Promise();
-    this.controller.chatRoom = { addMessage : sinon.stub().returns(promise) };
+
+    var add = this.addMessagePromise = new Promise();
+    var wait = this.waitForMessagesPromise = new Promise();
+
+    this.controller.chatRoom = {
+        addMessage : sinon.stub().returns(add),
+        waitForMessagesSince : sinon.stub().returns(wait)
+    };
+
     this.jsonParse = JSON.parse;
 
     this.sendRequest = function(data){
