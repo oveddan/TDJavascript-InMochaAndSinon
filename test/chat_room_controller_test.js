@@ -70,6 +70,13 @@ suite('chatRoomController.post', function(){
            done();
        }.bind(this));
    });
+   test('should not response immediately', function(done){
+       this.controller.post();
+       this.sendRequest({data: {}});
+
+       assert.isFalse(this.res.end.called);
+       done();
+   });
 });
 
 function controllerSetup(){
